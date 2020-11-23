@@ -1,0 +1,6 @@
+arrow==0.15.8
+attrs==19.3.0
+loguru==0.4.1
+multiconsumers-queue==0.1.2
+python-dateutil==2.8.1
+six==1.15.0
