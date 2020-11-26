@@ -7,10 +7,11 @@ class Node(at.Node):
     def __init__(self, graph_node: 'str', parent=None):
         super().__init__(graph_node, parent=parent)
         self.action = None
+        self.g = self.get_g()
         if self.parent:
-            parentX, parentY = tuple([int(number)
+            parentY, parentX = tuple([int(number)
                                       for number in parent.name.split(',')])
-            x, y = tuple([int(number) for number in graph_node.split(',')])
+            y, x = tuple([int(number) for number in graph_node.split(',')])
             diff_x = parentX - x
             diff_y = parentY - y
             if diff_x == 1 and diff_y == 0:
@@ -23,3 +24,9 @@ class Node(at.Node):
                 self. action = Action.DOWN
             else:
                 pass
+
+    def get_g(self):
+        if self.parent:
+            return self.parent.get_g() + 1
+        else:
+            return 0
