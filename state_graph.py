@@ -1,5 +1,6 @@
 import networkx as nx
 import matplotlib.pyplot as plt
+from node import Node
 
 
 class StateSpace(object):
@@ -52,5 +53,9 @@ class StateSpace(object):
         plt.savefig('test_image.png')
         plt.show()
 
-    def expand_node(self, node_label):
-        return list(nx.neighbors(self.graph, node_label))
+    def expand_node(self, node_label, parentNode):
+        neighbors = list(nx.neighbors(self.graph, node_label))
+        result = []
+        for neighbor in neighbors:
+            result.append(Node(neighbor, parent=parentNode))
+        return result
