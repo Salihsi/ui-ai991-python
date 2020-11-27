@@ -1,28 +1,30 @@
 from state_graph import StateSpace
 from base import TurnData,AgentData,Action
+import itertools
+from solution import solution
+from node import Node
 
-def search(problem,limit):
-    for i in range(len(limit)):
-        result = depth_limited_search(problem, limit)
-		if result != "cutoff":
-			return result
+def search(problem):
+    for depth in itertools.count(start=0):
+        result = depth_limited_search(problem.initial_state , problem, depth)
+        if result:
+            return result
 
-def depth_limited_search(problem, limit):
-	return recursive_dls(problem.initial_state, problem, limit)
+def depth_limited_search(node,problem,limit):
+    root_node = Node(node)
+    return recursive_dls(root_node,problem,limit)
 
 
-def rucersive_dls(node,problem,limit):
+
+def recursive_dls(node, problem, limit):
     if problem.goal_test(node):
-        return Solution(node)
-
-    elif limit == 0 :
-        return "Cutoff"
-
-    else :
-        children = problem.expand_node(node.name,node)
-        for child in children :    
-    
-            result = recursive_dls(child,problem,limit-1) 
-            if result != "failure" :
+        return solution(node)
+    elif limit == 0:
+        return
+    else:
+        children = problem.expand_node(node.name, node)
+        for child in children:
+            result= recursive_dls(child, problem, limit-1)
+            if result:
                 return result
-        return "failure"
+        return None

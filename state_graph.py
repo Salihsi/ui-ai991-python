@@ -59,3 +59,8 @@ class StateSpace(object):
         for neighbor in neighbors:
             result.append(Node(neighbor, parent=parentNode))
         return result
+    
+    def goal_test(self , node):
+        if self.goal[0] == node.name :
+            return True
+        return False
