@@ -21,8 +21,8 @@ class uninformedagent(BaseAgent):
             print(turn_data.map)
             problem = StateSpace(map)
             sequence = search(problem)
-            if sequence == "failure" :
-                return None
+        if sequence == "failure" :
+            return None
         return sequence.pop()
 
 if __name__ == '__main__':
