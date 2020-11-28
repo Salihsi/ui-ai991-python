@@ -28,7 +28,7 @@ class Agent(BaseAgent):
           agentx, agenty = turn_data.agent_data[0].position
           problem.initial_state = f'{agentx},{agenty}'
           self.sequence = search(problem)
-          if self.sequence:
+        if self.sequence:
             return self.sequence.pop()
         # return random.choice(list(Action))
 
