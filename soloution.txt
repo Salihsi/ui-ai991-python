@@ -1,8 +1,0 @@
-function soloution(node, seq) returns a sequence list:
-	seq.append(node.action)
-	if not node.parent:
-		return seq
-	else:
-		return soloution(node.parent, seq)
-
-		

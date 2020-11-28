@@ -24,13 +24,6 @@ class Agent(BaseAgent):
             print(f"COLLECTED: {agent.collected}")
         for row in turn_data.map:
             print(''.join(row))
-        # if not self.sequence :
-        #   problem = StateSpace(turn_data.map)
-        #   agentx, agenty = turn_data.agent_data[0].position
-        #   problem.initial_state = f'{agentx},{agenty}'
-        #   self.sequence = search(problem)
-        # if self.sequence:
-        #     return self.sequence.pop()
 
         if not self.conclusion:
             if agent.carrying == None:
