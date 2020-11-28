@@ -61,6 +61,7 @@ class StateSpace(object):
         return result
     
     def goal_test(self , node):
-        if self.goal[0] == node.name :
+        # if self.goal[0] == node.name :
+        if  node.name in self.goal :
             return True
         return False

@@ -8,6 +8,7 @@ class Agent(BaseAgent):
     def __init__(self):
         BaseAgent.__init__(self)
         self.sequence = []
+        self.conclusion = []
         print(f"MY NAME: {self.name}")
         print(f"PLAYER COUNT: {self.agent_count}")
         print(f"GRID SIZE: {self.grid_size}")
@@ -23,13 +24,31 @@ class Agent(BaseAgent):
             print(f"COLLECTED: {agent.collected}")
         for row in turn_data.map:
             print(''.join(row))
-        if not self.sequence :
-          problem = StateSpace(turn_data.map)
-          agentx, agenty = turn_data.agent_data[0].position
-          problem.initial_state = f'{agentx},{agenty}'
-          self.sequence = search(problem)
-        if self.sequence:
-            return self.sequence.pop()
+        # if not self.sequence :
+        #   problem = StateSpace(turn_data.map)
+        #   agentx, agenty = turn_data.agent_data[0].position
+        #   problem.initial_state = f'{agentx},{agenty}'
+        #   self.sequence = search(problem)
+        # if self.sequence:
+        #     return self.sequence.pop()
+
+        if not self.conclusion:
+            if agent.carrying == None:
+                if not self.sequence :
+                   problem = StateSpace(turn_data.map)
+                   agentx, agenty = turn_data.agent_data[0].position
+                   problem.initial_state = f'{agentx},{agenty}'
+                   self.sequence = search(problem)
+                if self.sequence:
+                    return self.sequence.pop()
+            else:
+                problem = StateSpace(turn_data.map , True)
+                agentx, agenty = turn_data.agent_data[0].position
+                problem.initial_state = f'{agentx},{agenty}'  
+                self.conclusion = search(problem)
+        if self.conclusion:
+            return self.conclusion.pop()
+        
         # return random.choice(list(Action))
 
 if __name__ == '__main__':
