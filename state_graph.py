@@ -1,7 +1,7 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 from node import Node
-
+from a_node import a_Node
 
 class StateSpace(object):
 
@@ -61,7 +61,13 @@ class StateSpace(object):
         return result
     
     def goal_test(self , node):
-        # if self.goal[0] == node.name :
         if  node.name in self.goal :
             return True
         return False
+
+    def expand_node_a(self, node_label, parentNode):
+        neighbors = list(nx.neighbors(self.graph, node_label))
+        result = []
+        for neighbor in neighbors:
+            result.append(a_Node(neighbor, parent=parentNode , goal=self.goal))
+        return result
