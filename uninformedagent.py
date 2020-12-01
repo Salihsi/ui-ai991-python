@@ -20,17 +20,21 @@ class Agent(BaseAgent):
                    agentx, agenty = turn_data.agent_data[0].position
                    problem.initial_state = f'{agentx},{agenty}'
                    print("problem , agent to gem" ,  time.time() - now)
+                   seqTime = time.time()
                    self.sequence = search(problem)
                    print("agent  to gem : " , time.time() - now)
+                   print("just seq : " , time.time() - seqTime)
                 if self.sequence:
                     return self.sequence.pop()
             else:
                 problem = StateSpace(turn_data.map , True)
                 agentx, agenty = turn_data.agent_data[0].position
                 problem.initial_state = f'{agentx},{agenty}'
-                print("problem , agent to paygah" ,  time.time() - now)  
+                print("problem , agent to base" ,  time.time() - now)  
+                seqTime = time.time()
                 self.conclusion = search(problem)
-                print("gem to paygah" ,  time.time() - now)
+                print("gem to base" ,  time.time() - now)
+                print("just seq : " , time.time() - seqTime)
         if self.conclusion:
             return self.conclusion.pop()
         
