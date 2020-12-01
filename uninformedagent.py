@@ -2,7 +2,7 @@ import random
 from base import BaseAgent, TurnData, Action
 from state_graph import StateSpace
 from search import search
-
+import time
 class Agent(BaseAgent):
 
     def __init__(self):
@@ -45,6 +45,8 @@ class Agent(BaseAgent):
         # return random.choice(list(Action))
 
 if __name__ == '__main__':
+    now = time.time()
     winner = Agent().play()
     print("WINNER: " + winner)
+    print(time.time() - now)
 
