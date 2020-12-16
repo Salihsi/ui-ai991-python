@@ -1,6 +1,6 @@
 import random
 from base import BaseAgent, TurnData, Action
-
+from problem import Problem
 
 class Agent(BaseAgent):
 
@@ -21,6 +21,7 @@ class Agent(BaseAgent):
             print(f"COLLECTED: {agent.collected}")
         for row in turn_data.map:
             print(''.join(row))
+        Problem(turn_data.map , agent.position)
         action_name = input("> ").upper()
         if action_name == "U":
             return Action.UP
