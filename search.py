@@ -16,7 +16,7 @@ class Search:
         if self.problem.goal_test(node):
             return solution(node)
         else:    
-            children = self.problem.expand_node_a(node.name ,node)
+            children = self.problem.expand_node(node.name ,node)
             for child in children:
                 if not child in self.explored:
                     self.frontier.append(child)
@@ -24,6 +24,3 @@ class Search:
                 return "failure"
             self.frontier.sort(reverse=True)
             return self.recursive_search(self.frontier.pop())
-
-        
-

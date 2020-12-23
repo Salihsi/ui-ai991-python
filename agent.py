@@ -1,11 +1,14 @@
 import random
 from base import BaseAgent, TurnData, Action
 from problem import Problem
-
+from gemOrderSearch import Search
+from state_graph import StateSpace
 class Agent(BaseAgent):
-
+    
     def __init__(self):
         BaseAgent.__init__(self)
+        self.gemSeq = []
+        self.seq = []
         print(f"MY NAME: {self.name}")
         print(f"PLAYER COUNT: {self.agent_count}")
         print(f"GRID SIZE: {self.grid_size}")
@@ -21,7 +24,15 @@ class Agent(BaseAgent):
             print(f"COLLECTED: {agent.collected}")
         for row in turn_data.map:
             print(''.join(row))
-        Problem(turn_data.map , agent.position)
+        
+        if self.seq :
+            pass
+        else :
+            mapProblem = StateSpace(turn_data.map)
+            problem = Problem(turn_data.map , agent.position , mapProblem ,self.max_turns)
+            gemSeq = Search(problem).start_search()
+            print(gemSeq)
+    
         action_name = input("> ").upper()
         if action_name == "U":
             return Action.UP

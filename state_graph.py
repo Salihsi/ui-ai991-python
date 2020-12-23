@@ -52,19 +52,13 @@ class StateSpace(object):
         plt.savefig('test_image.png')
         plt.show()
 
-    def expand_node(self, node_label, parentNode):
-        neighbors = list(nx.neighbors(self.graph, node_label))
-        result = []
-        for neighbor in neighbors:
-            result.append(Node(neighbor, parent=parentNode))
-        return result
     
     def goal_test(self , node):
         if  node.name in self.goal :
             return True
         return False
 
-    def expand_node_a(self, node_label, parentNode):
+    def expand_node(self, node_label, parentNode):
         neighbors = list(nx.neighbors(self.graph, node_label))
         result = []
         for neighbor in neighbors:
