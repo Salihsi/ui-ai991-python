@@ -75,9 +75,9 @@ class Node(at.Node):
                 return False
         elif self.turns_left < 0 and other.turns_left > 0:
             if self.last_score > other.score:
-                return False
-            else:
                 return True
+            else:
+                return False
         else:
             if self.last_score > other.last_score:
                 return True
