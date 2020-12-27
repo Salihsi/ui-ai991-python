@@ -3,6 +3,7 @@ from base import BaseAgent, TurnData, Action
 from problem import Problem
 from gemOrderSearch import Search
 from state_graph import StateSpace
+from aStarSearch import ASearch
 class Agent(BaseAgent):
     
     def __init__(self):
@@ -24,25 +25,34 @@ class Agent(BaseAgent):
             print(f"COLLECTED: {agent.collected}")
         for row in turn_data.map:
             print(''.join(row))
-        
-        if self.seq :
-            pass
-        else :
-            mapProblem = StateSpace(turn_data.map)
+        location = tuple()
+        if not self.seq :
+            mapProblem = StateSpace(turn_data.map , True)
             problem = Problem(turn_data.map , agent.position , mapProblem ,self.max_turns)
-            gemSeq = Search(problem).start_search()
-            print(gemSeq)
-    
-        action_name = input("> ").upper()
-        if action_name == "U":
-            return Action.UP
-        if action_name == "D":
-            return Action.DOWN
-        if action_name == "L":
-            return Action.LEFT
-        if action_name == "R":
-            return Action.RIGHT
-        return random.choice(list(Action))
+            gemSeq = eval(Search(problem).start_search())
+            for gem in gemSeq:
+                if not location:
+                    location = turn_data.agent_data[0].position
+                x , y , s = gem
+                i , j = location
+                mapProblem.initial_state = f'{i},{j}'
+                problemGoal = mapProblem.goal
+                mapProblem.goal = [f'{x},{y}']
+                seq , node = ASearch(mapProblem).start_search()
+                for a in seq[::-1]:
+                    self.seq.append(a)
+                mapProblem.goal = problemGoal
+                mapProblem.initial_state = f'{x},{y}'
+                seq , node = ASearch(mapProblem).start_search()
+                location = eval(node.name)
+                for a in seq[::-1]:
+                    self.seq.append(a)
+
+        if self.seq :
+            return self.seq.pop(0)
+                
+
+
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 from node import Node
-
+from aStarNode import a_Node
 class StateSpace(object):
 
     def __init__(self, matrix, final=False):
@@ -63,4 +63,11 @@ class StateSpace(object):
         result = []
         for neighbor in neighbors:
             result.append(Node(neighbor, parent=parentNode , goal=self.goal))
+        return result
+
+    def expand_node_a(self, node_label, parentNode):
+        neighbors = list(nx.neighbors(self.graph, node_label))
+        result = []
+        for neighbor in neighbors:
+            result.append(a_Node(neighbor, parent=parentNode , goal=self.goal))
         return result
