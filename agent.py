@@ -1,6 +1,6 @@
 import random
 from base import BaseAgent, TurnData, Action
-
+from genetic im
 
 class Agent(BaseAgent):
 
