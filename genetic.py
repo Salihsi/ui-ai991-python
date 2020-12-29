@@ -15,7 +15,7 @@ class City:
         return "(" + str(self.x) + "," + str(self.y) + ")"
 
 class Fitness:
-    def __init__(self, route):
+    def __init__(self, route ):
         self.route = route
         self.distance = 0
         self.fitness= 0.0
@@ -186,5 +186,5 @@ cityList = []
 for i in range(0,25):
     cityList.append(City(x=int(random.random() * 200), y=int(random.random() * 200)))
 
-geneticAlgorithm(population=cityList, popSize=100, eliteSize=20, mutationRate=0.01, generations=500)
-#geneticAlgorithmPlot(population=cityList, popSize=100, eliteSize=20, mutationRate=0.01, generations=500)
+#geneticAlgorithm(population=cityList, popSize=100, eliteSize=20, mutationRate=0.01, generations=500)
+geneticAlgorithmPlot(population=cityList, popSize=100, eliteSize=20, mutationRate=0.01, generations=500)
