@@ -3,18 +3,18 @@ import numpy as np, random, operator, pandas as pd, matplotlib.pyplot as plt , n
 class Fitness:
     def __init__(self, route , turns_left , position , problem):
         self.problem = problem
-        self.route = route
+        self.route = route.copy()
         self.turns_left = turns_left
         self.position = position
         self.currentScore = 0
         self.score = 0
-        self.fitness= 0.0
+
     
     def routeScore(self):
         if self.score ==0:
             i = 0
             while self.turns_left >= 0 and  self.route:
-                nextPosition = self.route[i]
+                nextPosition = self.route.pop(0)
                 if i % 2 == 0 :
                     x , y , s  = nextPosition
                     self.currentScore = s
@@ -34,9 +34,9 @@ class Fitness:
         return self.score
         
     def routeFitness(self):
-        if self.fitness == 0:
-            self.fitness = float(self.routeScore())
-        return self.fitness
+        if self.score == 0:
+            self.score = self.routeScore()
+        return self.score
 
 def parsMap(map , pop):
     gemList =[]
@@ -179,16 +179,16 @@ def mutate(individual, mutationRate):
     for swapped in range(len(individual)):
         if(random.random() < mutationRate):
             if swapped % 2 == 0 :
-                swapWith = int(random.randrange(0 , len(individual) - 1 , 2))
+                swapWith = random.randrange(0 , len(individual) - 1 , 2)
             else:
-                swapWith = int(random.randrange(1 , len(individual) - 1 , 2))
+                swapWith = random.randrange(1 , len(individual) - 1 , 2)
             
             
-            city1 = individual[swapped]
-            city2 = individual[swapWith]
+            node1 = individual[swapped]
+            node2 = individual[swapWith]
             
-            individual[swapped] = city2
-            individual[swapWith] = city1
+            individual[swapped] = node2
+            individual[swapWith] = node1
     return individual
 
 def nextGeneration(currentGen, eliteSize, mutationRate , turns_left , position , problem):

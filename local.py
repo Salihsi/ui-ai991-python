@@ -32,12 +32,12 @@ class Agent(BaseAgent):
         #     return Action.RIGHT
         # return random.choice(list(Action))
         problem = func.problem(turn_data.map)
-        initialPopulation = func.parsMap(turn_data.map , 50)
+        initialPopulation = func.parsMap(turn_data.map , 100)
         progress = []
         progress.append(func.rankRoutes(initialPopulation, turn_data.turns_left , turn_data.agent_data[0].position , problem)[0][1])
 
-        for i in range(0, 1000):
-            initialPopulation = func.nextGeneration(initialPopulation, 10, 0.01 , turn_data.turns_left , turn_data.agent_data[0].position , problem)
+        for i in range(0, 2000):
+            initialPopulation = func.nextGeneration(initialPopulation, 20, 0.005 , turn_data.turns_left , turn_data.agent_data[0].position , problem)
             generationScore = func.rankRoutes(initialPopulation, turn_data.turns_left , turn_data.agent_data[0].position , problem)[0][1]
             progress.append(generationScore)
     
