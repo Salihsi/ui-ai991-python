@@ -1,6 +1,6 @@
 import random
 from base import BaseAgent, TurnData, Action
-
+from qtable import qtable
 
 class Agent(BaseAgent):
 
@@ -19,18 +19,21 @@ class Agent(BaseAgent):
             print(f"POSITION: {agent.position}")
             print(f"CARRYING: {agent.carrying}")
             print(f"COLLECTED: {agent.collected}")
-        for row in turn_data.map:
-            print(''.join(row))
-        action_name = input("> ").upper()
-        if action_name == "U":
-            return Action.UP
-        if action_name == "D":
-            return Action.DOWN
-        if action_name == "L":
-            return Action.LEFT
-        if action_name == "R":
-            return Action.RIGHT
-        return random.choice(list(Action))
+        # for row in turn_data.map:
+        #     print(''.join(row))
+        # action_name = input("> ").upper()
+        # if action_name == "U":
+        #     return Action.UP
+        # if action_name == "D":
+        #     return Action.DOWN
+        # if action_name == "L":
+        #     return Action.LEFT
+        # if action_name == "R":
+        #     return Action.RIGHT
+        # return random.choice(list(Action))
+        table = qtable.Qtable(turn_data.map , self.max_turns , agent.position)
+        table.train()
+        print(table.qtable)
 
 
 if __name__ == '__main__':

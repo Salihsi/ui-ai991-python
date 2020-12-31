@@ -1,6 +1,11 @@
 import numpy as np , random , copy
 
 class Game():
+    wall_score = -0.5
+    outOfRange_score = -0.8
+    base_score = +0.2
+    step_score = -0.1
+
     carrying = False
 
     def __init__(self ,map , position):
@@ -11,46 +16,48 @@ class Game():
         newx , newy  = 0,0
         if action == 0:
             newx = self.x - 1
-            nexy = self.y
+            newy = self.y
         elif action == 1:
             newx = self.x + 1
-            nexy = self.y
+            newy = self.y
         elif action == 2:
             newx = self.x 
-            nexy = self.y - 1
+            newy = self.y - 1
         else:
             newx = self.x 
-            nexy = self.y + 1
+            newy = self.y + 1
 
         if self.carrying :
-            if (newx < 0) or (newx > len(self.map)) or (newy < 0) or (newy > len(self.map)):
-                return ((len(self.map) * self.x) + self.y , -1.5 , False)
+            if (newx < 0) or (newx >= len(self.map)) or (newy < 0) or (newy >= len(self.map)):
+                return ((len(self.map) * self.x) + self.y , self.outOfRange_score , False)
             elif self.map[newx][newy] == '*':
-                return ((len(self.map) * self.x) + self.y , -1.25 , False)
+                return ((len(self.map) * self.x) + self.y , self.wall_score , False)
             elif self.map[newx][newy] == 'a':
                 self.carrying = False
                 self.x = newx
                 self.y = newy
-                return ((len(self.map) * self.x) + self.y , 1 , self.goal())
+                return ((len(self.map) * self.x) + self.y , self.base_score , self.goal())
             else:
                 self.x = newx
                 self.y = newy
-                return ((len(self.map) * self.x) + self.y , -1 , False) 
+                return ((len(self.map) * self.x) + self.y , self.step_score , False) 
             
         else :
-            if (newx < 0) or (newx > len(self.map)) or (newy < 0) or (newy > len(self.map)):
-                return ((len(self.map) * self.x) + self.y , -1.5 , False)
+            if (newx < 0) or (newx >= len(self.map)) or (newy < 0) or (newy >= len(self.map)):
+                return ((len(self.map) * self.x) + self.y , self.outOfRange_score , False)
             elif self.map[newx][newy] == '*':
-                return ((len(self.map) * self.x) + self.y , -1.25 , False)
-            elif self.map[newx][newy].isdigit:
+                return ((len(self.map) * self.x) + self.y , self.wall_score , False)
+            elif self.map[newx][newy].isdigit():
+                n = int(self.map[newx][newy])
+                self.map[newx][newy] = '.'
                 self.carrying = True
                 self.x = newx
                 self.y = newy
-                return ((len(self.map) * self.x) + self.y , self.getScore(int(self.map[self.x][self.y])) , False)
+                return ((len(self.map) * self.x) + self.y , self.getScore(n) , False)
             else:
                 self.x = newx
                 self.y = newy
-                return ((len(self.map) * self.x) + self.y , -1 , False) 
+                return ((len(self.map) * self.x) + self.y , self.step_score , False) 
 
     def goal(self):
         for i in range(len(self.map)):
@@ -71,9 +78,8 @@ class Game():
         else :
             return 10
 
-
 class Qtable():
-    total_episodes = 10000        # Total episodes
+    total_episodes = 1000      # Total episodes
     learning_rate = 0.8           # Learning rate
     gamma = 0.95                  # Discounting rate
     epsilon = 1.0                 # Exploration rate
@@ -83,7 +89,7 @@ class Qtable():
 
     rewards = []
 
-    def __init__(self ,map, max_turns , position):
+    def __init__(self , map, max_turns , position):
         self.max_steps = max_turns
         self.map = map
         self.position = position 
@@ -110,7 +116,6 @@ class Qtable():
                 else:
                     action = random.randint(0 , 3)
 
-                #new_state, reward, done = env.step(action)
                 new_state, reward, done = game.play(action)
 
 
@@ -126,4 +131,3 @@ class Qtable():
             #episode += 1
             self.epsilon = self.min_epsilon + (self.max_epsilon - self.min_epsilon)*np.exp(-self.decay_rate*episode) 
             self.rewards.append(total_rewards)
-
