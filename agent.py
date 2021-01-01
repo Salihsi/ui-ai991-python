@@ -1,7 +1,8 @@
 import random
 from base import BaseAgent, TurnData, Action
 from qtable import qtable
-
+import matplotlib.pyplot as plt
+import numpy as np
 class Agent(BaseAgent):
 
     def __init__(self):
@@ -33,8 +34,11 @@ class Agent(BaseAgent):
         # return random.choice(list(Action))
         table = qtable.Qtable(turn_data.map , self.max_turns , agent.position)
         table.train()
+        print(table.gem_rewards)
         print(table.qtable)
 
+        plt.plot(table.gem_rewards)
+        plt.savefig('test_image.png')
 
 if __name__ == '__main__':
     winner = Agent().play()

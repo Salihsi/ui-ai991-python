@@ -29,35 +29,35 @@ class Game():
 
         if self.carrying :
             if (newx < 0) or (newx >= len(self.map)) or (newy < 0) or (newy >= len(self.map)):
-                return ((len(self.map) * self.x) + self.y , self.outOfRange_score , False)
+                return ((len(self.map) * self.x) + self.y , self.outOfRange_score , False , 0)
             elif self.map[newx][newy] == '*':
-                return ((len(self.map) * self.x) + self.y , self.wall_score , False)
+                return ((len(self.map) * self.x) + self.y , self.wall_score , False , 0)
             elif self.map[newx][newy] == 'a':
                 self.carrying = False
                 self.x = newx
                 self.y = newy
-                return ((len(self.map) * self.x) + self.y , self.base_score , self.goal())
+                return ((len(self.map) * self.x) + self.y , self.base_score , self.goal() , 0)
             else:
                 self.x = newx
                 self.y = newy
-                return ((len(self.map) * self.x) + self.y , self.step_score , False) 
+                return ((len(self.map) * self.x) + self.y , self.step_score , False , 0) 
             
         else :
             if (newx < 0) or (newx >= len(self.map)) or (newy < 0) or (newy >= len(self.map)):
-                return ((len(self.map) * self.x) + self.y , self.outOfRange_score , False)
+                return ((len(self.map) * self.x) + self.y , self.outOfRange_score , False , 0)
             elif self.map[newx][newy] == '*':
-                return ((len(self.map) * self.x) + self.y , self.wall_score , False)
+                return ((len(self.map) * self.x) + self.y , self.wall_score , False , 0)
             elif self.map[newx][newy].isdigit():
                 n = int(self.map[newx][newy])
                 self.map[newx][newy] = '.'
                 self.carrying = True
                 self.x = newx
                 self.y = newy
-                return ((len(self.map) * self.x) + self.y , self.getScore(n) , False)
+                return ((len(self.map) * self.x) + self.y , self.getScore(n) , False , self.getScore(n))
             else:
                 self.x = newx
                 self.y = newy
-                return ((len(self.map) * self.x) + self.y , self.step_score , False) 
+                return ((len(self.map) * self.x) + self.y , self.step_score , False , 0) 
 
     def goal(self):
         for i in range(len(self.map)):
@@ -88,6 +88,7 @@ class Qtable():
     decay_rate = 0.01             # Exponential decay rate for exploration prob
 
     rewards = []
+    gem_rewards = []
 
     def __init__(self , map, max_turns , position):
         self.max_steps = max_turns
@@ -104,8 +105,8 @@ class Qtable():
             step = 0
             done = False
             total_rewards = 0
-            game = Game(self.map , self.position)
-    
+            game = Game(copy.deepcopy(self.map) , self.position)
+            total_gem_score = 0
             for step in range(self.max_steps):
 
                 exp_exp_tradeoff = random.uniform(0, 1)
@@ -116,12 +117,14 @@ class Qtable():
                 else:
                     action = random.randint(0 , 3)
 
-                new_state, reward, done = game.play(action)
+                new_state, reward, done  , gem = game.play(action)
 
 
                 self.qtable[state, action] = self.qtable[state, action] + self.learning_rate * (reward + self.gamma * np.max(self.qtable[new_state, :]) - self.qtable[state, action])
         
                 total_rewards += reward
+
+                total_gem_score += gem
         
                 state = new_state
         
@@ -129,5 +132,6 @@ class Qtable():
                     break
         
             #episode += 1
+            self.gem_rewards.append(total_gem_score)
             self.epsilon = self.min_epsilon + (self.max_epsilon - self.min_epsilon)*np.exp(-self.decay_rate*episode) 
             self.rewards.append(total_rewards)
