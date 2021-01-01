@@ -39,9 +39,10 @@ class Agent(BaseAgent):
             progress = []
             
             progress.append(func.rankRoutes(initialPopulation, turn_data.turns_left , turn_data.agent_data[0].position , problem)[0][1])
-            for i in range(0, 1000):
-                initialPopulation = func.nextGeneration(initialPopulation, 20, 0.005 , turn_data.turns_left , turn_data.agent_data[0].position , problem)
-                generationScore = func.rankRoutes(initialPopulation, turn_data.turns_left , turn_data.agent_data[0].position , problem)[0][1]
+            for i in range(0, 500):
+                initialPopulation = func.nextGeneration(initialPopulation, 20, 0.05 , turn_data.turns_left , turn_data.agent_data[0].position , problem)
+                generationScoreList = func.rankRoutes(initialPopulation, turn_data.turns_left , turn_data.agent_data[0].position , problem)
+                generationScore = generationScoreList[0][1]
                 progress.append(generationScore)
 
             routeIndex = func.rankRoutes(initialPopulation, turn_data.turns_left , turn_data.agent_data[0].position , problem)[0][0]
@@ -49,11 +50,11 @@ class Agent(BaseAgent):
             #print(route)
             self.result = self.get_seq(route , turn_data.agent_data[0].position , problem) 
             #print(rs)
-            #plt.plot(progress)
-            #plt.ylabel('Score')
-            #plt.xlabel('Generation')
+            plt.plot(progress)
+            plt.ylabel('Score')
+            plt.xlabel('Generation')
             #plt.show()
-            #plt.savefig('test_image.png')
+            plt.savefig('test_image.png')
 
         return self.result.pop(0) 
 
