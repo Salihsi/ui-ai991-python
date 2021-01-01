@@ -1,16 +1,16 @@
 import numpy as np , random , copy
+from base import Action
 
 class Game():
-    wall_score = -0.5
-    outOfRange_score = -0.8
-    base_score = +0.2
-    step_score = -0.1
-
-    carrying = False
+    wall_score = -1.25
+    outOfRange_score = -1.5
+    base_score = +1
+    step_score = -1
 
     def __init__(self ,map , position):
         self.map = map
         self.x , self.y = position
+        self.carrying =False
 
     def play(self ,action):
         newx , newy  = 0,0
@@ -29,9 +29,9 @@ class Game():
 
         if self.carrying :
             if (newx < 0) or (newx >= len(self.map)) or (newy < 0) or (newy >= len(self.map)):
-                return ((len(self.map) * self.x) + self.y , self.outOfRange_score , False , 0)
+                return ((len(self.map) * self.x) + self.y + len(self.map) * len(self.map), self.outOfRange_score , False , 0)
             elif self.map[newx][newy] == '*':
-                return ((len(self.map) * self.x) + self.y , self.wall_score , False , 0)
+                return ((len(self.map) * self.x) + self.y + len(self.map) * len(self.map), self.wall_score , False , 0)
             elif self.map[newx][newy] == 'a':
                 self.carrying = False
                 self.x = newx
@@ -40,7 +40,7 @@ class Game():
             else:
                 self.x = newx
                 self.y = newy
-                return ((len(self.map) * self.x) + self.y , self.step_score , False , 0) 
+                return ((len(self.map) * self.x) + self.y + len(self.map) * len(self.map), self.step_score , False , 0) 
             
         else :
             if (newx < 0) or (newx >= len(self.map)) or (newy < 0) or (newy >= len(self.map)):
@@ -53,7 +53,7 @@ class Game():
                 self.carrying = True
                 self.x = newx
                 self.y = newy
-                return ((len(self.map) * self.x) + self.y , self.getScore(n) , False , self.getScore(n))
+                return ((len(self.map) * self.x) + self.y + len(self.map) * len(self.map), self.getScore(n) , False , self.getScore(n))
             else:
                 self.x = newx
                 self.y = newy
@@ -79,13 +79,13 @@ class Game():
             return 10
 
 class Qtable():
-    total_episodes = 1000      # Total episodes
-    learning_rate = 0.8           # Learning rate
-    gamma = 0.95                  # Discounting rate
-    epsilon = 1.0                 # Exploration rate
-    max_epsilon = 1.0             # Exploration probability at start
-    min_epsilon = 0.01            # Minimum exploration probability 
-    decay_rate = 0.01             # Exponential decay rate for exploration prob
+    total_episodes = 50000         # Total episodes
+    learning_rate = 0.9            # Learning rate
+    gamma = 0.65                   # Discounting rate
+    epsilon = 1.0                  # Exploration rate
+    max_epsilon = 1.0              # Exploration probability at start
+    min_epsilon = 0.01             # Minimum exploration probability 
+    decay_rate = 0.01              # Exponential decay rate for exploration prob
 
     rewards = []
     gem_rewards = []
@@ -96,7 +96,7 @@ class Qtable():
         self.position = position 
         state_size = len(map) * len(map)
         action_size = 4
-        self.qtable = np.zeros((state_size, action_size))
+        self.qtable = np.zeros((state_size * 2, action_size))
 
     def train(self):
         for episode in range(self.total_episodes):
@@ -135,3 +135,23 @@ class Qtable():
             self.gem_rewards.append(total_gem_score)
             self.epsilon = self.min_epsilon + (self.max_epsilon - self.min_epsilon)*np.exp(-self.decay_rate*episode) 
             self.rewards.append(total_rewards)
+
+    def get_seq(self):
+        result = []
+        x , y = self.position
+        state = (len(self.map) * x) + y
+        game = Game(copy.deepcopy(self.map) , self.position)
+        for i in range(self.max_steps):
+            action = np.argmax(self.qtable[state,:])
+            state, reward, done  , gem = game.play(action)
+            if action == 0:
+                result.append(Action.UP)
+            elif action == 1:
+                result.append(Action.DOWN)
+            elif action == 2:
+                result.append(Action.LEFT)
+            else:
+                result.append(Action.RIGHT)
+        return result
+
+

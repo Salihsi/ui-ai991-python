@@ -1,12 +1,13 @@
 import random
 from base import BaseAgent, TurnData, Action
-from qtable import qtable
+from qtable import Qtable
 import matplotlib.pyplot as plt
 import numpy as np
 class Agent(BaseAgent):
 
     def __init__(self):
         BaseAgent.__init__(self)
+        self.result =[]
         print(f"MY NAME: {self.name}")
         print(f"PLAYER COUNT: {self.agent_count}")
         print(f"GRID SIZE: {self.grid_size}")
@@ -32,13 +33,19 @@ class Agent(BaseAgent):
         # if action_name == "R":
         #     return Action.RIGHT
         # return random.choice(list(Action))
-        table = qtable.Qtable(turn_data.map , self.max_turns , agent.position)
-        table.train()
-        print(table.gem_rewards)
-        print(table.qtable)
+        if not self.result:
+            table = Qtable(turn_data.map , self.max_turns , agent.position)
+            table.train()
+            #print(table.gem_rewards)
+            print(table.qtable)
+            self.result = table.get_seq()
+            #print(res)
+        
+        return self.result.pop(0)
 
-        plt.plot(table.gem_rewards)
-        plt.savefig('test_image.png')
+
+        #plt.plot(table.gem_rewards)
+        #plt.savefig('test_image.png')
 
 if __name__ == '__main__':
     winner = Agent().play()
