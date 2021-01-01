@@ -79,7 +79,7 @@ class Game():
             return 10
 
 class Qtable():
-    total_episodes = 50000         # Total episodes
+    total_episodes = 5000         # Total episodes
     learning_rate = 0.9            # Learning rate
     gamma = 0.65                   # Discounting rate
     epsilon = 1.0                  # Exploration rate

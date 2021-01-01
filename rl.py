@@ -40,12 +40,12 @@ class Agent(BaseAgent):
             print(table.qtable)
             self.result = table.get_seq()
             #print(res)
+            plt.plot(table.gem_rewards)
+            plt.savefig('test_image.png')
         
         return self.result.pop(0)
 
 
-        #plt.plot(table.gem_rewards)
-        #plt.savefig('test_image.png')
 
 if __name__ == '__main__':
     winner = Agent().play()
